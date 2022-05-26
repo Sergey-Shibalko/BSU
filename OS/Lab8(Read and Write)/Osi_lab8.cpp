@@ -53,7 +53,7 @@ int main()
         writerH[i] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Writer, b, 0, &ID);
     }
     for (int i = 0;i < r;i++) {
-        writerH[i] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Reader, b, 0, &ID);
+        readerH[i] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Reader, b, 0, &ID);
     }
     WaitForMultipleObjects(w, writerH, TRUE, INFINITE);
     WaitForMultipleObjects(r, readerH, TRUE, INFINITE);
