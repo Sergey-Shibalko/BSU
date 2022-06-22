@@ -18,7 +18,7 @@ public:
         delete[] arr;
     }
     void AddHead(unsigned short a) {
-        ProduceSem->try_acquire();
+        ProduceSem->acquire();
         arr[addPos] = a;
         addPos--;
         if (addPos == -1) {
@@ -64,12 +64,17 @@ int main()
     std::vector<std::thread>ProduceTh;
     for (int i = 0;i < b;i++) {
         ProduceTh.push_back(std::thread(Produce, monitor.get(),i+1));
-        ProduceTh[i].join();
+        //ProduceTh[i].join();
     }
     for (int i = 0;i < a;i++) {
         ConsumeTh.push_back(std::thread(Consume,monitor.get()));
+       // ConsumeTh[i].join();
+    }
+    for (int i = 0;i < b;i++) {
+        ProduceTh[i].join();
+    }
+    for (int i = 0;i < a;i++) {
         ConsumeTh[i].join();
     }
-
 }
 
