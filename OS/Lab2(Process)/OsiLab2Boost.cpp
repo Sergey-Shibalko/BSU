@@ -1,47 +1,13 @@
-﻿// Child.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+﻿// OsiLab2Boost.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
-#include<Windows.h>
-#include<conio.h>
-#include <iostream>
-using std::cout;
-void print(int* arr, int n) {
-    for (int i = 0;i < n;i++) {
-        cout << arr[i] << ' ';
-        
-    }
-    cout << '\n';
-}
-int main(int argc, char* argv[])
-{
-    int a = 0;
-    int d = argc / 2;
-    int* arr = new int[argc];
-    for (int i = 0;i < argc;i++) {
-        arr[i] = atoi(argv[i]);
-    }
-    print(arr, argc);
-    int temp;
-    while (d != 0) {
-        for (int i = 0;i < argc;i++) {
-            for (int j = i ; j <argc; j += d)
-            {
-                temp = arr[j];
-                for (int k = j; k >= 0; k -= d)
-                {
-                    if (temp < arr[k]) {
 
-                        arr[j] = arr[k];
-                        arr[k] = temp;
-                        break;
-                    }
-                }
-            }
-        }
-        d = d / 2;
-    }
-    print(arr, argc);
-    _getch();
-    delete[] arr;
+#include <iostream>
+#include<boost/process.hpp>
+int main()
+{
+    boost::process::child c("ChildBoost.exe");
+    c.join();
+    std::cout << "Hello World!\n";
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"

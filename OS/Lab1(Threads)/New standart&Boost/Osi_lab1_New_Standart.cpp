@@ -1,50 +1,28 @@
-﻿// Parent.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+﻿// Osi_lab1_New_Standart.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
-#define _CRT_SECURE_NO_WARNINGS
-#include<Windows.h>
-#include<conio.h>
-#include <iostream>
-#include <string>
-using namespace std;
 
+#include <iostream>
+#include <vector>
+#include <thread>
+void ElementsFromAToB(std::vector<double> &arr,int a,int b) {
+    for (int i = a;i <= b;i++) {
+        std::cout << arr[i] << " ";
+    }
+}
 int main()
 {
-    _CrtSetDebugFillThreshold(0);
-    char lpszAppName[] = "Child.exe";
-    STARTUPINFO si;
-    PROCESS_INFORMATION pi;
-    ZeroMemory(&si, sizeof(STARTUPINFO));
-    si.cb = sizeof(STARTUPINFO);
-    si.dwFlags = STARTF_USESIZE| STARTF_USEFILLATTRIBUTE;
-    si.lpTitle =(LPSTR) "Sergey Shibalko";
-    si.dwYSize = 1000;
-    si.dwFillAttribute = FOREGROUND_RED | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
-    string str="";
-    int t;
-    string tmp="";
     int n;
-    cin >> n;
+    std::cin >> n;
+    std::vector<double> arr(n);
     for (int i = 0;i < n;i++) {
-        cin >> tmp;
-        str +=tmp;
-        str += " ";
+        std::cin >> arr[i];
     }
-    cout << str;
-    str.length();
-    char* processArgv=new char[str.length()];
-    for (int i = 0;i < str.length()-1;i++) {
-        processArgv[i] = str[i];
-    }
-    if (!CreateProcess(lpszAppName, processArgv, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi)) {
-        _cputs("Invalid process");
-        return 0;
-    }
-    _cputs("Process created");
-    WaitForSingleObject(pi.hProcess, INFINITE);
-    CloseHandle(pi.hThread);
-    CloseHandle(pi.hProcess);
-    delete[] processArgv;
- }
+    int a, b;
+    std::cin >> a >> b;
+    std::thread worker(ElementsFromAToB,std::ref(arr), a, b);
+    worker.detach();
+    std::cout << "Hello World!\n";
+}
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
 // Отладка программы: F5 или меню "Отладка" > "Запустить отладку"

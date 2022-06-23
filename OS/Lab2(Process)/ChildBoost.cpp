@@ -1,27 +1,12 @@
-﻿// Osi_lab1_New_Standart.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+﻿// ChildBoost.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 
 #include <iostream>
-#include <vector>
-#include <thread>
-void ElementsFromAToB(std::vector<double> &arr,int a,int b) {
-    for (int i = a;i <= b;i++) {
-        std::cout << arr[i] << " ";
-    }
-}
 int main()
 {
-    int n;
-    std::cin >> n;
-    std::vector<double> arr(n);
-    for (int i = 0;i < n;i++) {
-        std::cin >> arr[i];
-    }
-    int a, b;
-    std::cin >> a >> b;
-    std::thread worker(ElementsFromAToB,ref(arr), a, b);
-    worker.detach();
     std::cout << "Hello World!\n";
+    char h;
+    std::cin >> h;
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"

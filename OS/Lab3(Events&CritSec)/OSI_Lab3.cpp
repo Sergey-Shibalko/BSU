@@ -3,58 +3,77 @@
 
 #include <iostream>
 #include<Windows.h>
-using namespace std;
+#include"Array.h"
+using std::cout;
+using std::cin;
 HANDLE workEvent, sumEvent;
-struct arr {
-    char* arr;
-    int n;
-};
-DWORD WINAPI work(arr* a) {
-    DWORD t;
+CRITICAL_SECTION cs;
+
+DWORD WINAPI work(array* a) {
+    DWORD timeForSleep;
     cout << "Input sleep time\n";
-    cin >> t;
+    cin >> timeForSleep;
     int l = 0;
-    for (size_t i = 0; i < a->n; i++)
+    for (size_t i = 0; i < a->size; i++)
     {
-        if (33 <= (int)a->arr[i] <= 47 || 58 <= (int)a->arr[i] <= 64 || 91 <= (int)a->arr[i] <= 96 || 123 <= (int)a->arr[i] <= 127) {
-            a->arr[l] = a->arr[i];
-            l++;
-            a->arr[i] = ' ';
+        if ((33 <= (int)a->array[i] && (int)a->array[i] <= 47) || 
+            (58 <= (int)a->array[i] && (int)a->array[i] <= 64) || 
+            (91 <= (int)a->array[i] && (int)a->array[i] <= 96) || 
+            (123 <= (int)a->array[i] && (int)a->array[i] <= 127)) {
+            if (l != i) {
+                a->array[l] = a->array[i];
+                l++;
+                a->array[i] = ' ';
+            }
+            else {
+                l++;
+            }
         }
         else {
-            a->arr[i] = ' ';
+            a->array[i] = ' ';
         }
-        Sleep(t);
+        Sleep(timeForSleep);
     }
     SetEvent(workEvent);
     return 0;
 }
-DWORD WINAPI SumElement(arr* a) {
+int sum = 0;
+DWORD WINAPI SumElement(array* a) {
+    EnterCriticalSection(&cs);
     WaitForSingleObject(sumEvent, INFINITE);
+    int i = 0;
+   
+        while (a->array[i] != ' ') {
+            sum += (int)a->array[i];
+            i++;
+            Sleep(200);
+        }
+    LeaveCriticalSection(&cs);
     return 0;
 }
 
 int main()
 {
-    arr a;
-    //cout << (int)' ';
+    array a;
+
     cout << "Input array size\n";
-    cin >> a.n;
-    a.arr = new char[a.n];
+    cin >> a.size;
+    a.array = new char[a.size];
     cout << "Input elements";
-    for (size_t i = 0; i < a.n; i++)
+    for (size_t i = 0; i < a.size; i++)
     {
-        cin >> a.arr[i];
+        cin >> a.array[i];
     }
-    cout << "Array size: " << a.n << "\n";
+    cout << "Array size: " << a.size << "\n";
     cout << "Array:\n";
-    for (size_t i = 0; i < a.n; i++)
+    for (size_t i = 0; i < a.size; i++)
     {
-        cout << a.arr[i];
+        cout << a.array[i];
     }
     cout << "\n";
     HANDLE work_h, SumElement_h;
     DWORD work_id, SumElement_id;
+    InitializeCriticalSection(&cs);
     int k;
     cout << "Input k\n";
     cin >> k;
@@ -75,13 +94,20 @@ int main()
         GetLastError();
     }
     WaitForSingleObject(workEvent, INFINITE);
-    for (size_t i = 0; i < a.n; i++)
+    for (size_t i = 0; i < a.size; i++)
     {
-        cout << a.arr[i];
+        cout << a.array[i];
         if (i == k) {
             SetEvent(sumEvent);
         }
     }
+    cout << "\nSum result\n";
+    EnterCriticalSection(&cs);
+    cout <<'\n'<< sum;
+    LeaveCriticalSection(&cs);
+    DeleteCriticalSection(&cs);
+    CloseHandle(work_h);
+    CloseHandle(SumElement_h);
     cout << "\n";
 }
 

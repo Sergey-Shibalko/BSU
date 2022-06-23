@@ -4,32 +4,33 @@
 #include <iostream>
 #include<conio.h>
 #include<Windows.h>
-using namespace std;
-
+using std::cout;
+using std::cin;
+void print(char* arr, int size) {
+    for (int i = 0;i < size;i++) {
+        cout << arr[i] << " ";
+    }
+    cout << "\n";
+}
 int main()
 {
-    //cout << "Hello World!\n";
     HANDLE write, read;
     HANDLE end = CreateEvent(NULL, FALSE, FALSE, "end");
     if (end == NULL) {
         GetLastError();
     }
-    int n;
+    int size;
     cout << "Enter array size \n";
 
-    cin >> n;
-    char* arr=new char[n];
+    cin >> size;
+    char* arr=new char[size];
     cout << "\nEnter array elements \n";
-    for (size_t i = 0; i < n; i++)
+    for (size_t i = 0; i < size; i++)
     {
         cin >> arr[i];
     }
     cout << '\n';
-    for (size_t i = 0; i < n; i++)
-    {
-        cout<< arr[i];
-    }
-    cout << "\n";
+    print(arr, size);
     HANDLE event = CreateEvent(NULL, FALSE, FALSE, "1");
     SECURITY_ATTRIBUTES sa;
     sa.nLength = sizeof(SECURITY_ATTRIBUTES);
@@ -41,37 +42,33 @@ int main()
     ZeroMemory(&si, sizeof(STARTUPINFO));
     si.cb = sizeof(STARTUPINFO);
     char a[80];
-    wsprintf(a, "Consume.exe %d %d %d", int(write), int(read),n);
+    wsprintf(a, "Consume.exe %d %d %d", int(write), int(read),size);
 
     if (!CreateProcess(NULL, a, NULL, NULL, TRUE,
         CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi)) {
         GetLastError();
     }
-   // WriteFile()
-    /*CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread)*/;
-    for (size_t i = 0; i < n; i++)
+    for (size_t i = 0; i < size; i++)
     {
-        DWORD size;
-        WriteFile(write, &arr[i], sizeof(arr[i]), &size, NULL);
+        DWORD sizeD;
+        WriteFile(write, &arr[i], sizeof(arr[i]), &sizeD, NULL);
     }
    SetEvent(event);
-   //HANDLE end = OpenEvent(SYNCHRONIZE, FALSE, "end");
-   
-   //Sleep(500);
    WaitForSingleObject(end, INFINITE);
-   int m;
+   int answSize;
    DWORD sz;
-   ReadFile(read, &m, sizeof(m), &sz, NULL);
-   char* h = new char[m];
-   for (int i = 0;i < m;i++) {
-       DWORD size;
-       ReadFile(read, &h[i], sizeof(h[i]), &size, NULL);
+   ReadFile(read, &answSize, sizeof(answSize), &sz, NULL);
+   char* answStr = new char[answSize];
+   for (int i = 0;i < answSize;i++) {
+       DWORD sizeD;
+       ReadFile(read, &answStr[i], sizeof(answStr[i]), &sizeD, NULL);
    }
-   for (int i = 0;i < m;i++) {
-       cout << h[i];
-   }
-   
+   print(answStr, answSize);
+   delete[]answStr;
+   delete[]arr;
+   CloseHandle(read);
+   CloseHandle(write);
+   CloseHandle(end);
    
 }
 

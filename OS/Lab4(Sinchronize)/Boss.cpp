@@ -4,7 +4,8 @@
 #include <iostream>
 #include<Windows.h>
 #include <conio.h>
-using namespace std;
+using std::cout;
+using std::cin;
 
 int main()
 {
@@ -65,6 +66,10 @@ int main()
         SetEvent(exit_ev);
     }
     _getch();
+    delete[]id;
+    delete[]st;
+    delete[]pi;
+    delete[] proc;
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"

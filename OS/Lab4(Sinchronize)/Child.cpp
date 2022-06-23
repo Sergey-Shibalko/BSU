@@ -4,7 +4,6 @@
 #include <iostream>
 #include<Windows.h>
 #include <conio.h>
-using namespace std;
 
 int main()
 {
@@ -30,7 +29,7 @@ int main()
 	std::cout << "Message " << ind << '\n' << "From Parent to Child";
 	_getch();
     ReleaseMutex(mut);
-	cout << "\nEnd";
+	std::cout << "\nEnd";
 	WaitForSingleObject(exit_ev, INFINITE);
     
 }

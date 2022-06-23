@@ -5,7 +5,8 @@
 #include<Windows.h>
 #include<conio.h>
 #include <set>
-using namespace std;
+using std::cout;
+using std::cin;
 
 int main(int argc, char* argv[])
 {
@@ -61,6 +62,7 @@ int main(int argc, char* argv[])
     while (ex != 'Q') {
         cin >> ex;
     }
+    delete[]a;
     //cin >> b;
     
 }

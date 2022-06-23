@@ -1,10 +1,16 @@
-﻿// Osi_Lab6.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
+﻿
 #include <iostream>
 #include<Windows.h>
-using namespace std;
+using std::cout;
+using std::cin;
+void print(char* arr,int size) {
+    for (size_t i = 0; i < size; i++)
+    {
+        cout << arr[i];
+    }
 
+    cout << "\n";
+}
 int main()
 {
     SECURITY_ATTRIBUTES sa;
@@ -12,25 +18,18 @@ int main()
     HANDLE hNamedPipe;
     sa.nLength = sizeof(sa);
     sa.bInheritHandle = FALSE; 
-    int n;
+    int size;
     cout << "Enter array size \n";
-
-    cin >> n;
-    char* arr = new char[n];
+    cin >> size;
+    char* arr = new char[size];
     cout << "\nEnter array elements \n";
-    for (size_t i = 0; i < n; i++)
+    for (size_t i = 0; i < size; i++)
     {
         cin >> arr[i];
     }
     cout << '\n';
-    for (size_t i = 0; i < n; i++)
-    {
-        cout << arr[i];
-    }
-    cout << "\n";
+    print(arr, size);
     char h = 'h';
-    //DWORD sz;
-    
     InitializeSecurityDescriptor(&sd, SECURITY_DESCRIPTOR_REVISION);
     SetSecurityDescriptorDacl(&sd, TRUE, NULL, FALSE);
     sa.lpSecurityDescriptor = &sd;
@@ -45,8 +44,8 @@ int main()
     char c;
     if (hNamedPipe == INVALID_HANDLE_VALUE)
     {
-        cerr << "Creation of the named pipe failed." << endl
-            << "The last error code: " << GetLastError() << endl;
+        std::cerr << "Creation of the named pipe failed." << std::endl
+            << "The last error code: " << GetLastError() << std::endl;
         cout << "Press any char to finish server: ";
         cin >> c;
         return 0;
@@ -55,28 +54,17 @@ int main()
     ConnectNamedPipe(hNamedPipe, (LPOVERLAPPED)NULL);
     char r;
     DWORD sz;
-    WriteFile(hNamedPipe, &n, sizeof(n), &sz, (LPOVERLAPPED)NULL);
-    WriteFile(hNamedPipe, arr, n, &sz, (LPOVERLAPPED)NULL);
+    WriteFile(hNamedPipe, &size, sizeof(size), &sz, (LPOVERLAPPED)NULL);
+    WriteFile(hNamedPipe, arr, size, &sz, (LPOVERLAPPED)NULL);
     int m;
     //DWORD sz;
     ReadFile(hNamedPipe, &m, sizeof(m), &sz, (LPOVERLAPPED)NULL);
     char* res = new char[m];
     ReadFile(hNamedPipe, res, m, &sz, (LPOVERLAPPED)NULL);
     cout << '\n';
-    for (size_t i = 0; i < m; i++)
-    {
-        cout << res[i];
-    }
+    print(res, m);
     cin >> r;
+    delete[]res;
+    delete[]arr;
+    CloseHandle(hNamedPipe);
 }
-
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
